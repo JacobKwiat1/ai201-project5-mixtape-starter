@@ -1,4 +1,6 @@
-app.py
+    AI usage: I used AI to summarize the files and their functions for me at the beginning. Other than that I did the entire project by hand.
+    
+    app.py
     flask app
     SQLAlchemy
     imports blueprints from routes
@@ -206,4 +208,3 @@ bugs:
 
     fix $2: changed ListeningEvent.listened_at >= cutoff to ListeningEvent.listened_at > cutoff on line 42 of feed_service. now get_friends_listening_now only returns users from today rather than including listeners from the cutoff.
 
-    AI usage: I used AI to summarize the files and their functions for me at the beginning. Other than that I did the entire project by hand.
