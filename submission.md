@@ -185,3 +185,8 @@ seed_data.py
 
     defines functions for:
         seed()
+
+
+bug reproduction:
+    bug #1: by creating a session for a user that listened on saturday and then trying to update the streak on sunday, I found that the streak reset to 1.
+    fix #1: removed "and today.weekday() != 6" from elif on line 73 of feed_service.py. Now properly increments even if today.weekday() returns sunday
