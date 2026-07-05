@@ -194,4 +194,5 @@ bug reproduction:
     bug #6: creating a playlist and then calling get_playlist_songs always returned all but the last song.
     fix #6: changed return [song.to_dict() for song in songs[:-1]] to return [song.to_dict() for song in songs]. The return value now loops through all values in the array rather than all but the last.
 
-    
+    bug #2: calling get_friends_listening_now gets users from yesterday as well as today. 
+    fix $2: changed ListeningEvent.listened_at >= cutoff to ListeningEvent.listened_at > cutoff on line 42 of feed_service. now get_friends_listening_now only returns users from today.
