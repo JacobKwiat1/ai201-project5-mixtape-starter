@@ -203,5 +203,7 @@ bugs:
     bug #2 Friends Listening Now shows people from yesterday: calling get_friends_listening_now gets users from yesterday as well as today. 
 
     root cause analysis: the most likely place for the issue seemed to be in feed_service.py. After looking through the code, the check for recent events included users who listened on the cutoff which is the previous day. Excluding those users fixed the issue.
-    
+
     fix $2: changed ListeningEvent.listened_at >= cutoff to ListeningEvent.listened_at > cutoff on line 42 of feed_service. now get_friends_listening_now only returns users from today rather than including listeners from the cutoff.
+
+    AI usage: I used AI to summarize the files and their functions for me at the beginning. Other than that I did the entire project by hand.
