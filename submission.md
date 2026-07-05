@@ -187,12 +187,21 @@ seed_data.py
         seed()
 
 
-bug reproduction:
-    bug #1: by creating a session for a user that listened on saturday and then trying to update the streak on sunday, I found that the streak reset to 1.
+bugs:
+    bug #1 My listening streak keeps resetting: by creating a session for a user that listened on saturday and then trying to update the streak on sunday, I found that the streak reset to 1.
+
+    root cause analysis: looking at feed_service.py, after a quick read it was easy to see the elif statement that caused the counter to be skipped on sundays.
+
     fix #1: removed "and today.weekday() != 6" from elif on line 73 of feed_service.py. Now properly increments even if today.weekday() returns sunday
 
-    bug #6: creating a playlist and then calling get_playlist_songs always returned all but the last song.
-    fix #6: changed return [song.to_dict() for song in songs[:-1]] to return [song.to_dict() for song in songs]. The return value now loops through all values in the array rather than all but the last.
+    bug #5 the last song in a playlist never shows up: creating a playlist and then calling get_playlist_songs always returned all but the last song.
 
-    bug #2: calling get_friends_listening_now gets users from yesterday as well as today. 
-    fix $2: changed ListeningEvent.listened_at >= cutoff to ListeningEvent.listened_at > cutoff on line 42 of feed_service. now get_friends_listening_now only returns users from today.
+    root cause analysis: based on the bug report, the most likely place for issue was playlist_service.py. Reading through the get_playlist_songs() with the bug in mind made it very easy to spot the last song bring spliced off the list in the return.
+
+    fix #5: in playlist_service.py changed get_playlist_songs return from [song.to_dict() for song in songs[:-1]] to [song.to_dict() for song in songs]. The return value now loops through all values in the array rather than all but the last.
+
+    bug #2 Friends Listening Now shows people from yesterday: calling get_friends_listening_now gets users from yesterday as well as today. 
+
+    root cause analysis: the most likely place for the issue seemed to be in feed_service.py. After looking through the code, the check for recent events included users who listened on the cutoff which is the previous day. Excluding those users fixed the issue.
+    
+    fix $2: changed ListeningEvent.listened_at >= cutoff to ListeningEvent.listened_at > cutoff on line 42 of feed_service. now get_friends_listening_now only returns users from today rather than including listeners from the cutoff.
